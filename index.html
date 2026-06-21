@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEIC® Listening and Reading Practice Test</title>
+    <style>
+        /* ETS 官方嚴謹排版與配色 */
+        body { font-family: Arial, Helvetica, sans-serif; background-color: #e0e4e8; margin: 0; padding: 0; color: #333; }
+        .screen { display: none; }
+        .active-screen { display: block; }
+        
+        .header { background-color: #004b87; color: #ffffff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #f2a900; }
+        .header-title { font-size: 22px; font-weight: bold; letter-spacing: 1px; }
+        .header-info { font-size: 14px; }
+
+        .container { background-color: #ffffff; width: 95%; max-width: 1100px; margin: 20px auto; border: 1px solid #ccc; box-shadow: 0 4px 10px rgba(0,0,0,0.15); min-height: 80vh; position: relative; }
+
+        .nav-tabs { display: flex; background-color: #f1f1f1; border-bottom: 2px solid #004b87; }
+        .nav-btn { 
+            flex: 1; padding: 12px 15px; border: none; background: none; font-size: 15px; 
+            cursor: pointer; border-right: 1px solid #ccc; font-weight: bold; color: #555; transition: 0.2s;
+        }
+        .nav-btn:hover { background-color: #e6e6e6; }
+        .nav-btn.active-btn { 
+            background-color: #ffffff; color: #004b87; 
+            border-top: 3px solid #004b87; border-bottom: 2px solid #ffffff; margin-bottom: -2px; 
+        }
+
+        .login-box { padding: 50px; text-align: center; }
+        .login-instructions { text-align: left; background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; margin: 20px auto; width: 60%; font-size: 14px; line-height: 1.6; }
+        input[type="text"] { padding: 10px; font-size: 16px; border: 1px solid #aaa; width: 250px; margin-top: 10px; }
+        .btn-primary { background-color: #004b87; color: white; border: none; padding: 12px 30px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; border-radius: 3px; }
+        .btn-primary:hover { background-color: #003666; }
+
+        /* 成績單設計 */
+        .score-report-wrapper { padding: 30px; }
+        .score-certificate { border: 2px solid #d3d3d3; padding: 30px; max-width: 800px; margin: 0 auto; background: #fafafa; }
+        .cert-header { text-align: center; border-bottom: 3px double #004b87; padding-bottom: 10px; margin-bottom: 20px; }
+        .cert-title { font-size: 24px; font-weight: bold; color: #004b87; text-transform: uppercase; }
+        .examinee-info { margin-bottom: 20px; font-size: 16px; width: 100%; border-collapse: collapse; }
+        .examinee-info td { padding: 8px; border-bottom: 1px solid #eee; }
+        .examinee-info td:first-child { font-weight: bold; color: #555; width: 30%; }
+        
+        .test-btn { display: block; width: 100%; padding: 15px; margin: 15px 0; background-color: #004b87; color: white; border: none; font-size: 18px; font-weight: bold; cursor: pointer; text-align: left; padding-left: 20px; border-radius: 3px; }
+        .test-btn:hover { background-color: #003666; }
+
+        .footer { text-align: center; padding: 10px; font-size: 12px; color: #777; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-title">TOEIC® Practice Test Portal</div>
+        <div class="header-info" id="header-time"></div>
+    </div>
+
+    <div class="container">
+        <div id="login-screen" class="screen active-screen">
+            <div class="login-box">
+                <h2 style="color: #004b87;">Examinee Check-in (考生報到)</h2>
+                <div class="login-instructions">
+                    <strong>Instructions (測驗須知):</strong>
+                    <ul>
+                        <li>Please enter your name below. (請在下方輸入您的姓名)</li>
+                        <li>If left blank, you will be logged in as "Guest". (若未填寫，系統將自動以 Guest 身分登入)</li>
+                    </ul>
+                </div>
+                <input type="text" id="playerNameInput" placeholder="Enter your name..."><br>
+                <button class="btn-primary" onclick="startGame()">Start Test (開始測驗)</button>
+            </div>
+        </div>
+
+        <div id="main-system" class="screen">
+            <div class="nav-tabs">
+                <button class="nav-btn active-btn">Official Score Report</button>
+            </div>
+
+            <div id="dashboard-screen" class="screen active-screen score-report-wrapper">
+                <div class="score-certificate">
+                    <div class="cert-header">
+                        <div class="cert-title">Official Practice Score Report</div>
+                    </div>
+                    <table class="examinee-info">
+                        <tr><td>Name:</td><td><span id="display-name" style="font-weight:bold;"></span></td></tr>
+                        <tr><td>Test Date:</td><td><span id="display-date"></span></td></tr>
+                        <tr><td>Candidate ID:</td><td><span id="candidate-id"></span></td></tr>
+                    </table>
+                    
+                    <h3 style="color:#004b87; margin-top:30px;">Practice Sections</h3>
+                    <button class="test-btn" onclick="window.location.href='https://script.google.com/macros/s/AKfycbzYxcZ60kogro-nI5ZqdwuY6NMZniNwDQzGVPRPX3cHwjjb4X7MjU_8uXwMN4Gb94vZ/exec'">Start Part 1: Photographs</button>
+                    <button class="test-btn" onclick="window.location.href='https://script.google.com/macros/s/AKfycbxXm3FLwzQYWgZaKNGzaSAC4JXMhCIeFyNAHcaXrsCN_B7e0BFMro7pAUhFVim5gU8/exec'">Start Part 5: Incomplete Sentences</button>
+                    <button class="test-btn" onclick="window.location.href='https://script.google.com/macros/s/AKfycbzKygAuBcflshB7uuHdAuEMipj_s1h9dLlbxjLBu1D3myGQrldgUNUAt_14ZRRH048/exec'">Start Part 6: Text Completion</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        © 2026 Simulated TOEIC Practice Portal. This is a practice tool and not affiliated with ETS®.
+    </div>
+
+    <script>
+        function startGame() {
+            let nameInput = document.getElementById('playerNameInput').value.trim() || "Guest";
+            document.getElementById('display-name').innerText = nameInput;
+            
+            const today = new Date();
+            document.getElementById('display-date').innerText = today.getFullYear() + "/" + (today.getMonth()+1) + "/" + today.getDate();
+            document.getElementById('candidate-id').innerText = "TW" + Math.floor(Math.random() * 900000 + 100000);
+
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-system').style.display = 'block';
+        }
+
+        setInterval(() => {
+            document.getElementById('header-time').innerText = new Date().toLocaleTimeString('en-US', { hour12: false });
+        }, 1000);
+    </script>
+</body>
+</html>
