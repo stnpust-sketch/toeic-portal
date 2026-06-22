@@ -3,89 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOEIC® Listening and Reading Practice Test</title>
+    <title>TOEIC® Practice Test Portal</title>
     <style>
-        /* 介面使用乾淨俐落的無襯線字體，背景色同步子網頁 */
-        body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background-color: #F3F4F6; margin: 0; padding: 0; color: #333; }
+        :root {
+            var(--toeic-navy): #0F2C59; 
+            --toeic-navy: #0F2C59; 
+            --toeic-blue: #1A5F7A; 
+            --toeic-orange: #FF6B35;
+            --body-bg: #F3F4F6; 
+            --card-bg: #FFFFFF; 
+            --text-dark: #1F2937;
+            --text-light: #4B5563; 
+            --border: #D1D5DB; 
+        }
+
+        body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background-color: var(--body-bg); margin: 0; padding: 0; color: var(--text-dark); }
         .screen { display: none; }
         .active-screen { display: block; }
         
-        /* 頂部 Header：同步子網頁的深海軍藍與亮橘色 */
-        .header { background-color: #0F2C59; color: #ffffff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #FF6B35; }
+        .header { background-color: var(--toeic-navy); color: #ffffff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--toeic-orange); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .header-title { font-size: 22px; font-weight: bold; letter-spacing: 1px; }
 
-        /* 主容器 */
-        .container { background-color: #ffffff; width: 95%; max-width: 1100px; margin: 20px auto; border: 1px solid #ccc; box-shadow: 0 4px 10px rgba(0,0,0,0.15); min-height: 80vh; position: relative; }
+        .container { background-color: var(--card-bg); width: 95%; max-width: 1100px; margin: 20px auto; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.08); min-height: 80vh; position: relative; border-radius: 4px; overflow: hidden; }
 
-        /* 導覽列 */
-        .nav-tabs { display: flex; background-color: #f1f1f1; border-bottom: 2px solid #0F2C59; }
+        .nav-tabs { display: flex; background-color: #E5E7EB; border-bottom: 2px solid var(--toeic-navy); }
         .nav-btn { 
-            flex: 1; padding: 12px 15px; border: none; background: none; font-size: 15px; 
-            cursor: pointer; border-right: 1px solid #ccc; font-weight: bold; color: #555; transition: 0.2s;
+            flex: 1; padding: 14px 15px; border: none; background: none; font-size: 15px; 
+            cursor: pointer; border-right: 1px solid var(--border); font-weight: bold; color: var(--text-light); transition: 0.2s;
         }
-        .nav-btn:hover { background-color: #e6e6e6; }
+        .nav-btn:hover { background-color: #D1D5DB; }
         .nav-btn.active-btn { 
-            background-color: #ffffff; color: #0F2C59; 
-            border-top: 3px solid #0F2C59; border-bottom: 2px solid #ffffff; margin-bottom: -2px; 
+            background-color: var(--card-bg); color: var(--toeic-navy); 
+            border-top: 4px solid var(--toeic-navy); border-bottom: 2px solid var(--card-bg); margin-bottom: -2px; 
         }
 
-        /* 登入畫面 */
-        .login-box { padding: 50px; text-align: center; }
-        .login-instructions { text-align: left; background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; margin: 20px auto; width: 60%; font-size: 14px; line-height: 1.6; }
-        input[type="text"] { padding: 10px; font-size: 16px; border: 1px solid #aaa; width: 250px; margin-top: 10px; }
+        .login-box { padding: 60px 50px; text-align: center; }
+        .login-instructions { text-align: left; background-color: #F9FAFB; padding: 25px; border: 1px solid var(--border); margin: 20px auto; width: 60%; font-size: 14px; line-height: 1.7; border-radius: 4px;}
+        input[type="text"] { padding: 12px; font-size: 16px; border: 1px solid var(--border); width: 250px; margin-top: 10px; border-radius: 4px;}
         .btn-primary { 
-            background-color: #0F2C59; color: white; border: none; padding: 12px 30px; 
-            font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; border-radius: 3px; 
+            background-color: var(--toeic-navy); color: white; border: none; padding: 14px 40px; 
+            font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 25px; border-radius: 4px; transition: 0.2s;
         }
-        .btn-primary:hover { background-color: #1A5F7A; }
+        .btn-primary:hover { background-color: var(--toeic-blue); }
 
-        /* 成績單設計：換成官方證書專用的 Times New Roman 襯線字體，質感倍增 */
-        .score-report-wrapper { padding: 30px; font-family: "Times New Roman", Times, serif; }
-        .score-certificate { border: 2px solid #d3d3d3; padding: 30px; max-width: 800px; margin: 0 auto; position: relative; background: url('https://www.transparenttextures.com/patterns/cream-paper.png'); }
-        .cert-header { text-align: center; border-bottom: 3px double #0F2C59; padding-bottom: 10px; margin-bottom: 20px; }
-        .cert-title { font-size: 26px; font-weight: bold; color: #0F2C59; text-transform: uppercase; }
-        .examinee-info { margin-bottom: 20px; font-size: 18px; border-collapse: collapse; width: 100%; }
-        .examinee-info td { padding: 8px; border-bottom: 1px solid #eee; }
-        .examinee-info td:first-child { font-weight: bold; color: #555; width: 30%; }
+        .score-report-wrapper { padding: 35px; }
+        .score-certificate { border: 2px solid var(--border); padding: 35px; max-width: 850px; margin: 0 auto; position: relative; background: url('https://www.transparenttextures.com/patterns/cream-paper.png') #FAFAFA; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .cert-header { text-align: center; border-bottom: 3px double var(--toeic-navy); padding-bottom: 12px; margin-bottom: 25px; font-family: "Times New Roman", Times, serif; }
+        .cert-title { font-size: 26px; font-weight: bold; color: var(--toeic-navy); text-transform: uppercase; letter-spacing: 0.5px; }
         
-        /* 分數區塊排版 */
-        .score-box-container { display: flex; justify-content: space-around; margin-top: 30px; font-family: Arial, Helvetica, sans-serif; }
-        .score-box { border: 1px solid #aaa; text-align: center; width: 30%; padding: 15px; background-color: #fdfdfd; }
-        .score-box-title { font-size: 14px; font-weight: bold; color: #555; border-bottom: 1px solid #ccc; padding-bottom: 5px; margin-bottom: 10px; }
-        .score-value { font-size: 32px; font-weight: bold; color: #000; }
+        .examinee-info { margin-bottom: 25px; font-size: 16px; border-collapse: collapse; width: 100%; background: #FFFFFF; border: 1px solid var(--border); }
+        .examinee-info td { padding: 12px 15px; border-bottom: 1px solid #EEEEEE; }
+        .examinee-info td:first-child { font-weight: bold; color: var(--text-light); width: 25%; background: #F9FAFB; border-right: 1px solid #EEEEEE; }
         
-        .total-score-box { background-color: #eaf1f8; border: 2px solid #0F2C59; }
-        .total-score-box .score-box-title { color: #0F2C59; border-bottom: 2px solid #0F2C59; }
+        .score-box-container { display: flex; justify-content: space-around; margin-top: 30px; gap: 15px; }
+        .score-box { border: 1px solid var(--border); text-align: center; width: 33%; padding: 20px 10px; background-color: #FFFFFF; border-radius: 4px; }
+        .score-box-title { font-size: 13px; font-weight: bold; color: var(--text-light); border-bottom: 1px solid #E5E7EB; padding-bottom: 8px; margin-bottom: 15px; letter-spacing: 0.5px; }
+        .score-value { font-size: 34px; font-weight: bold; color: var(--text-dark); }
+        
+        .total-score-box { background-color: #F0F4F8; border: 2px solid var(--toeic-navy); }
+        .total-score-box .score-box-title { color: var(--toeic-navy); border-bottom: 2px solid var(--toeic-navy); }
+        .total-score-box .score-value { color: var(--toeic-navy); }
 
-        /* iframe 容器 */
+        /* 新增：真實紀錄表格設計 */
+        .history-section { margin-top: 40px; }
+        .history-section h3 { color: var(--toeic-navy); font-size: 18px; border-bottom: 2px solid var(--toeic-navy); padding-bottom: 10px; margin-bottom: 15px; font-family: "Times New Roman", Times, serif; text-transform: uppercase;}
+        .history-table { width: 100%; border-collapse: collapse; background: #FFF; border: 1px solid var(--border); font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .history-table th { background: #F0F4F8; color: var(--toeic-navy); padding: 12px; text-align: left; border-bottom: 2px solid var(--border); }
+        .history-table td { padding: 12px; border-bottom: 1px solid #EEE; color: var(--text-dark); line-height: 1.5; }
+        .history-table tr:hover { background-color: #F9FAFB; }
+        .badge { background: #E0E7FF; color: #0369A1; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 4px;}
+
         .iframe-container { width: 100%; height: 75vh; border: none; display: block; }
-        
-        /* 底部版權宣告 */
-        .footer { text-align: center; padding: 10px; font-size: 12px; color: #777; margin-top: 10px; }
+        .footer { text-align: center; padding: 12px; font-size: 12px; color: var(--text-light); margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="header-title">TOEIC® Practice Test Portal</div>
-        </div>
+    </div>
 
     <div class="container">
         
         <div id="login-screen" class="screen active-screen">
             <div class="login-box">
-                <h2 style="color: #0F2C59;">Examinee Check-in (考生報到)</h2>
+                <h2 style="color: var(--toeic-navy); font-size: 28px; margin-bottom: 10px;">Examinee Check-in (考生報到)</h2>
                 
                 <div class="login-instructions">
                     <strong>Instructions (測驗須知):</strong>
-                    <ul>
+                    <ul style="margin-top: 10px;">
                         <li>Please enter your name below. (請在下方輸入您的姓名)</li>
                         <li>If left blank, you will be logged in as "Guest". (若未填寫，系統將自動以 Guest 身分登入)</li>
-                        <li>This is a timed practice test. Do not close your browser during the test. (本測驗計時進行，測驗期間請勿關閉瀏覽器)</li>
+                        <li>This is a timed practice test. Do not close your browser during the test.</li>
                     </ul>
                 </div>
 
-                <label for="playerNameInput" style="font-weight:bold; color:#333;">Examinee Name:</label><br>
+                <label for="playerNameInput" style="font-weight:bold; color: var(--text-dark);">Examinee Name:</label><br>
                 <input type="text" id="playerNameInput" placeholder="Enter your name..."><br>
                 <button class="btn-primary" onclick="startGame()">Start Test (開始測驗)</button>
             </div>
@@ -104,33 +117,46 @@
                 <div class="score-certificate">
                     <div class="cert-header">
                         <div class="cert-title">Official Practice Score Report</div>
-                        <div style="font-size: 14px; color: #666; margin-top: 5px; font-family: Arial, sans-serif;">Secure Test Environment</div>
+                        <div style="font-size: 14px; color: #666; margin-top: 5px; font-family: Arial, sans-serif;">Score & Performance Evaluation System</div>
                     </div>
 
                     <table class="examinee-info">
-                        <tr><td>Name:</td><td><span id="display-name" style="font-weight:bold; font-size: 20px; color: #0F2C59;"></span></td></tr>
-                        <tr><td>Test Date:</td><td><span id="display-date"></span></td></tr>
-                        <tr><td>Candidate ID:</td><td><span id="candidate-id"></span></td></tr>
-                        <tr><td>Cumulative Time:</td><td><span id="cumulative-time" style="font-weight:bold; color:#FF6B35; font-family: Arial, sans-serif;">00:00:00</span></td></tr>
+                        <tr><td>Name:</td><td><span id="display-name" style="font-weight:bold; font-size: 20px; color: var(--toeic-navy);"></span></td></tr>
+                        <tr><td>Report Date:</td><td><span id="display-date"></span></td></tr>
+                        <tr><td>Candidate ID:</td><td><span id="candidate-id" style="font-family: Consolas, monospace;"></span></td></tr>
                     </table>
-
-                    <div style="text-align: center; margin-top: 20px; font-size: 15px; color: #555; font-style: italic;">
-                        *Data integration is currently in progress. Final scores will be updated upon completion.*
-                    </div>
 
                     <div class="score-box-container">
                         <div class="score-box">
-                            <div class="score-box-title">LISTENING (Part 1)</div>
-                            <div class="score-value">---</div>
+                            <div class="score-box-title">LISTENING (Highest)</div>
+                            <div class="score-value" id="score-listening">---</div>
                         </div>
                         <div class="score-box">
-                            <div class="score-box-title">READING (Part 5 & 6)</div>
-                            <div class="score-value">---</div>
+                            <div class="score-box-title">READING (Highest)</div>
+                            <div class="score-value" id="score-reading">---</div>
                         </div>
                         <div class="score-box total-score-box">
                             <div class="score-box-title">TOTAL SCORE</div>
-                            <div class="score-value">---</div>
+                            <div class="score-value" id="score-total">---</div>
                         </div>
+                    </div>
+
+                    <div class="history-section">
+                        <h3>Performance & Weakness Tracking</h3>
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th width="15%">Date</th>
+                                    <th width="25%">Section</th>
+                                    <th width="10%">Score</th>
+                                    <th width="15%">Accuracy</th>
+                                    <th width="35%">Grammar Weaknesses</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-tbody">
+                                <tr><td colspan="5" style="text-align:center; padding: 20px;">Please wait, syncing records from database...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -151,15 +177,11 @@
     </div>
     
     <div class="footer">
-        © 2026 Simulated TOEIC Practice Portal. This is a practice tool and not affiliated with ETS®.
+        © 2026 Simulated TOEIC Practice Portal.
     </div>
 
     <script>
         let globalPlayerName = "Guest"; 
-        let currentActiveTab = 'dashboard-screen';
-        let cumulativeSeconds = 0; 
-
-        // 【已刪除】干擾畫面的 setInterval 時鐘程式碼
 
         function startGame() {
             let nameInput = document.getElementById('playerNameInput').value.trim();
@@ -173,7 +195,6 @@
             document.getElementById('display-date').innerText = dateString;
             document.getElementById('candidate-id').innerText = "TW" + Math.floor(Math.random() * 900000 + 100000);
 
-            // 自動將名字附加到 iframe 網址後方
             let encodedName = encodeURIComponent(globalPlayerName);
             const iframes = document.querySelectorAll('.iframe-container');
             iframes.forEach(iframe => {
@@ -184,12 +205,11 @@
             document.getElementById('login-screen').classList.remove('active-screen');
             document.getElementById('main-system').classList.add('active-screen');
             
-            // 啟動背景累積時間追蹤器
-            startCumulativeTimer();
+            // 觸發抓取資料庫功能
+            fetchLearningRecords(globalPlayerName);
         }
 
         function switchTab(tabId, btnElement) {
-            currentActiveTab = tabId;
             const screens = document.querySelectorAll('#main-system .screen');
             screens.forEach(screen => screen.classList.remove('active-screen'));
             document.getElementById(tabId).classList.add('active-screen');
@@ -197,21 +217,79 @@
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => btn.classList.remove('active-btn'));
             btnElement.classList.add('active-btn');
+            
+            // 每次切回成績單時，重新整理一次資料庫 (讓剛考完的成績出現)
+            if(tabId === 'dashboard-screen') {
+                fetchLearningRecords(globalPlayerName);
+            }
         }
 
-        // 追蹤實際作答時間
-        function startCumulativeTimer() {
-            setInterval(() => {
-                // 只有在考題畫面時，時間才會繼續跑
-                if (currentActiveTab === 'part1-screen' || currentActiveTab === 'part5-screen' || currentActiveTab === 'part6-screen') {
-                    cumulativeSeconds++;
-                    let h = Math.floor(cumulativeSeconds / 3600);
-                    let m = Math.floor((cumulativeSeconds % 3600) / 60);
-                    let s = cumulativeSeconds % 60;
-                    document.getElementById('cumulative-time').innerText = 
-                        String(h).padStart(2, '0') + ":" + String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
+        // 串接試算表 API，實作資料視覺化
+        async function fetchLearningRecords(playerName) {
+            const tbody = document.getElementById('history-tbody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px;">🔄 Syncing records...</td></tr>';
+            
+            try {
+                // 透過開源轉檔 API 直接讀取你的學習紀錄 Sheet
+                const response = await fetch('https://opensheet.elk.sh/1wuHMRZIiR0EwRo57FgVPVWuClNt5JdUKiAI89NMDlzo/學習紀錄');
+                if(!response.ok) throw new Error("Network response was not ok");
+                
+                const data = await response.json();
+                
+                // 過濾出目前登入玩家的紀錄
+                const userRecords = data.filter(row => row['Player Name'] === playerName);
+                
+                if (userRecords.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px; color: #666;">No practice records found for ${playerName}. Take a test to start tracking!</td></tr>`;
+                    return;
                 }
-            }, 1000);
+
+                let bestListening = 0;
+                let bestReading = 0;
+                let tableHtml = '';
+
+                // 反向迴圈：把最新的測驗排在最上面
+                for (let i = userRecords.length - 1; i >= 0; i--) {
+                    const row = userRecords[i];
+                    const section = row['Test Section'] || '';
+                    const score = parseInt(row['Estimated TOEIC Score']) || 0;
+                    const dateOnly = (row['Practice Date'] || '').split(' ')[0];
+                    let weaknesses = row['Grammar Weaknesses'] || 'None';
+                    
+                    // 拆分弱點字串並加上 Badge 視覺效果
+                    if(weaknesses !== 'None') {
+                        weaknesses = weaknesses.split(',').map(w => `<span class="badge">${w.trim()}</span>`).join(' ');
+                    }
+
+                    // 記錄最高分以填入上方的 Score Box
+                    if (section.includes('PART 1') && score > bestListening) bestListening = score;
+                    if ((section.includes('PART 5') || section.includes('PART 6')) && score > bestReading) bestReading = score;
+
+                    // 產生表格列
+                    tableHtml += `
+                        <tr>
+                            <td>${dateOnly}</td>
+                            <td style="font-weight:bold; color: var(--toeic-navy);">${section}</td>
+                            <td style="font-weight:bold;">${score}</td>
+                            <td>${row['Accuracy Rate'] || '--'}</td>
+                            <td>${weaknesses}</td>
+                        </tr>
+                    `;
+                }
+
+                tbody.innerHTML = tableHtml;
+
+                // 更新頂部的三大分數面板
+                document.getElementById('score-listening').innerText = bestListening > 0 ? bestListening : '---';
+                document.getElementById('score-reading').innerText = bestReading > 0 ? bestReading : '---';
+                if (bestListening > 0 || bestReading > 0) {
+                    document.getElementById('score-total').innerText = bestListening + bestReading;
+                }
+
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px; color: red;">Failed to load records. Ensure your Google Sheet is shared as "Anyone with the link can view".</td></tr>`;
+            }
         }
     </script>
 </body>
